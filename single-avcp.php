@@ -7,7 +7,10 @@
  * @package Design_Scuole_Italia
  */
 global $post;
-get_template_part("template-parts/single/related-posts", $args = array( "post", "events", "circolari" )); 
+get_template_part("template-parts/single/related-posts","post");
+get_template_part("template-parts/single/related-posts","events");
+get_template_part("template-parts/single/related-posts","circolari");
+
 get_header();
 
 ?>
@@ -30,7 +33,7 @@ get_header();
             </section>
             <section class="section bg-white">
                 <div class="container">
-                    <div class="main-content row variable-gutters">
+                    <div class="row variable-gutters">
                         <div class="col-lg-12">
                             <article class="article-wrapper pt-4">
                                 <div class="row variable-gutters">

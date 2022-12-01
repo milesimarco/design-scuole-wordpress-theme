@@ -7,7 +7,9 @@
  * @package Design_Scuole_Italia
  */
 global $post, $servizio, $progetto, $autore, $luogo, $c;
-get_template_part("template-parts/single/related-posts", $args = array( "post", "events", "circolari" )); 
+get_template_part("template-parts/single/related-posts","post");
+get_template_part("template-parts/single/related-posts","events");
+get_template_part("template-parts/single/related-posts","circolari");
 get_header();
 
 $user_can_view_post = dsi_members_can_user_view_post(get_current_user_id(), $post->ID);
@@ -161,7 +163,7 @@ $user_can_view_post = dsi_members_can_user_view_post(get_current_user_id(), $pos
                             </aside>
 
                         </div>
-                        <div class="main-content col-lg-8 col-md-8 offset-lg-1">
+                        <div class="col-lg-8 col-md-8 offset-lg-1">
                             <article class="article-wrapper pt-4">
                                 <div class="row variable-gutters">
                                     <div class="col-lg-12 d-flex justify-content-end">
