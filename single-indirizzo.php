@@ -73,9 +73,12 @@ get_header();
                         <div class="col-12 col-sm-3 col-lg-2 d-none d-sm-block">
                             <div class="section-thumb mx-3">
                                 <?php
-                                if(has_post_thumbnail($post)){
-                                    echo "<img src='".get_the_post_thumbnail_url($post, "item-thumb")."'>";
-                                }
+                                    $image_id= get_post_thumbnail_id($post);
+                                    if(has_post_thumbnail($post))
+                                        $image_url = get_the_post_thumbnail_url($post, "item-thumb");
+                                    else
+                                        $image_url = get_template_directory_uri() ."/assets/placeholders/logo-service.png";
+                                    dsi_get_img_from_id_url( $image_id, $image_url );
                                 ?>
                             </div><!-- /section-thumb -->
                         </div><!-- /col-lg-2 -->
@@ -92,7 +95,7 @@ get_header();
                                     }
                                     echo "</small>";
                                 }  ?>
-                                <h2 class="mb-3"><?php the_title(); ?></h2>
+                                <h1 class="mb-3"><?php the_title(); ?></h1>
 
                                 <?php echo wpautop($descrizione); ?>
 
@@ -285,7 +288,7 @@ get_header();
 										?>
 											<div class="col-4 col-md-3">
 												<div class="note">
-													<svg class="svg-filters" width="68" height="34" aria-label="spid" role="img"><use xmlns:xlink="http://www.w3.org/1999/xlink" href="#svg-spid"></use></svg>
+													<svg class="svg-filters" width="90" height="64" aria-label="spid" role="img"><title>Logo SPID</title><use xmlns:xlink="http://www.w3.org/1999/xlink" href="#svg-spid"></use></svg>
 													<p><?php _e("Non hai SPID?", "design_scuole_italia"); ?><br/><a href="https://www.spid.gov.it" aria-label="scopri di più su SPID (apre pagina su nuova scheda)">Scopri di più</a>.</p>
 												</div>
 											</div>
@@ -294,7 +297,7 @@ get_header();
 										?>
 											<div class="col-4 col-md-3">
 												<div class="note cie">
-													<svg class="svg-filters" width="90" height="64" aria-label="cie" role="img"><use xmlns:xlink="http://www.w3.org/1999/xlink" href="#svg-cie"></use></svg>
+													<svg class="svg-filters" width="90" height="64" aria-label="cie" role="img"><title>Logo CIE</title><use xmlns:xlink="http://www.w3.org/1999/xlink" href="#svg-cie"></use></svg>
 													<p><?php _e("Non hai CIE?", "design_scuole_italia"); ?><br/><a href="https://www.cartaidentita.interno.gov.it/la-carta/" aria-label="scopri di più su CIE (apre pagina su nuova scheda)">Scopri di più</a>.</p>
 												</div>
 											</div>
@@ -303,8 +306,8 @@ get_header();
 											?>
 											<div class="col-4 col-md-3">
 												<div class="note cns">
-													<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-cns.png' ); ?>" alt="">
-													<p><?php _e("Non hai CNS?", "design_scuole_italia"); ?><br/><a href="#" aria-label="scopri di più su CNS (apre pagina su nuova scheda)">Scopri di più</a>.</p>
+													<img alt="Logo CNS" class="svg-filters" width="90" height="64" src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-cns.png' ); ?>">
+													<p><?php _e("Non hai CNS?", "design_scuole_italia"); ?><br/><a href="https://sistemats1.sanita.finanze.it/portale/modalita-di-accesso-con-ts_cns" aria-label="scopri di più su CNS (apre pagina su nuova scheda)">Scopri di più</a>.</p>
 												</div>
 											</div>
 										<?php }	
@@ -525,8 +528,8 @@ get_header();
                                             <div class="card card-bg bg-color rounded">
                                                 <div class="card-body pb-1">
                                                     <ul>
-                                                        <?php if($telefono){ ?><li><strong><?php _e("Telefono", "design_scuole_italia"); ?>:</strong> <?php echo $telefono; ?></li><?php } ?>
-                                                        <?php if($mail){ ?><li><strong><?php _e("Email", "design_scuole_italia"); ?>:</strong> <?php echo $mail; ?></li><?php } ?>
+                                                        <?php if($telefono){ ?><li><strong><?php _e("Telefono", "design_scuole_italia"); ?>:</strong> <?php echo "<a href='tel:+39$telefono'>$telefono</a>"; ?></li><?php } ?>
+                                                        <?php if($mail){ ?><li><strong><?php _e("Email", "design_scuole_italia"); ?>:</strong> <?php echo "<a href = 'mailto: $mail'>$mail</a>"; ?></li><?php } ?>
                                                     </ul>
                                                 </div></div>
                                         </div></div>

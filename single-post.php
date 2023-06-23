@@ -7,9 +7,8 @@
  * @package Design_Scuole_Italia
  */
 global $post, $autore, $luogo, $c, $badgeclass;
-get_template_part("template-parts/single/related-posts","post");
-get_template_part("template-parts/single/related-posts","events");
-get_template_part("template-parts/single/related-posts","circolari");
+$args = ["post", "evento", "circolare"];
+get_template_part("template-parts/single/related-posts");
 get_header();
 $link_schede_documenti = dsi_get_meta("link_schede_documenti");
 $file_documenti = dsi_get_meta("file_documenti");
@@ -21,10 +20,9 @@ $user_can_view_post = dsi_members_can_user_view_post(get_current_user_id(), $pos
     <main id="main-container" class="main-container greendark">
         <?php get_template_part("template-parts/common/breadcrumb"); ?>
 
-        <?php while ( have_posts() ) :  the_post();
-        set_views($post->ID);
-
-
+        <?php while ( have_posts() ) :  
+                the_post();
+                set_views($post->ID);
                 get_template_part("template-parts/single/header-post");
             ?>
 
@@ -41,7 +39,7 @@ $user_can_view_post = dsi_members_can_user_view_post(get_current_user_id(), $pos
                                         ?>
                                     </div>
                                 </div>
-                                <?php if((is_array($link_schede_documenti) && count($link_schede_documenti)>0) || (is_array($file_documenti) && count($file_documenti)>0)) { ?>
+                                <?php if (!post_password_required()) { if((is_array($link_schede_documenti) && count($link_schede_documenti)>0) || (is_array($file_documenti) && count($file_documenti)>0)) { ?>
                                     <h2 class="mb-4 h4"><?php _e("Documenti", "design_scuole_italia"); ?></h2>
                                     <div class="row variable-gutters">
                                         <div class="col-lg-12">
@@ -69,10 +67,11 @@ $user_can_view_post = dsi_members_can_user_view_post(get_current_user_id(), $pos
                                     </div><!-- /row -->
                                     <?php
                                 }
+                            }
                                 ?>
                                 <?php
 
-                                if(is_array($luoghi) && count($luoghi)>0){
+                                if(is_array($luoghi) && count($luoghi)>0 && (!post_password_required())) {
                                     ?>
                                     <h2 class="mb-4 h4"><?php _e("Luoghi", "design_scuole_italia"); ?></h2>
                                     <?php
@@ -104,10 +103,11 @@ $user_can_view_post = dsi_members_can_user_view_post(get_current_user_id(), $pos
                         <div class="col-lg-3 col-md-4 order-lg-0">
                             <?php get_template_part("template-parts/single/actions"); ?>
                             <?php
-                            $badgeclass = "badge-outline-greendark";
-                            get_template_part("template-parts/common/badges-argomenti"); ?>
+                                $badgeclass = "badge-outline-greendark";
+                                if ((!post_password_required()))
+                                    get_template_part("template-parts/common/badges-argomenti"); ?>
                             <?php
-                            if(is_array($persone) && count($persone)>0){
+                            if(is_array($persone) && count($persone)>0 && (!post_password_required())){
                                 ?>
                                 <div class="cards-aside mt-4">
                                     <h2 class="h4"><?php _e("Persone", "design_scuole_italia"); ?></h2>

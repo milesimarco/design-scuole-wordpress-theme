@@ -20,8 +20,11 @@ class Header_Menu_Walker extends Walker_Nav_Menu {
 		$output .= "<li>";
 		$custom_data = '';
 
-		if ($item->post_name == "servizi-per-il-personale-scolastico" || $item->post_name == "servizi-per-famiglie-e-studenti") {
+		if ( stripos( $item->title, 'personale scolastico' ) !== false || stripos( $item->title, 'famiglie e studenti' ) !== false ) {
 			$custom_data = 'data-element="service-type"';
+		}
+		if ( stripos( $item->title, 'i luoghi' ) !== false ) {
+			$custom_data = 'data-element="school-locations"';
 		}
 
 		if($custom_data) {
@@ -41,7 +44,5 @@ class Header_Menu_Walker extends Walker_Nav_Menu {
 		$output .= $item->title;
         
         $output .= '</a>';
-
-		$output .= "</li>";
 	}
 }

@@ -8,14 +8,14 @@ if(is_array($gruppo_carte) && count($gruppo_carte) > 0) {
 			<div class="row variable-gutters mt-0 mt-xl-5">
 				<div class="col">
 					<div class="title-section text-center mb-5">
-						<h3 class="mb-2"><?php _e( "Le carte dalla scuola", "design_scuole_italia" ); ?></h3>
+						<h3 class="mb-2"><?php _e( "Le carte della scuola", "design_scuole_italia" ); ?></h3>
 						<p><?php echo dsi_get_option( "descrizione_carte", "la_scuola" ); ?></p>
 					</div><!-- /title-section -->
 				</div><!-- /col -->
 			</div><!-- /row -->
 			<div class="row variable-gutters">
 				<div class="col">
-					<div class="it-carousel-wrapper carousel-cards splide" data-bs-carousel-splide>
+					<div class="it-carousel-wrapper it-carousel-landscape-abstract-three-cols splide" data-bs-carousel-splide>
                   		<div class="splide__track">
                     		<ul class="splide__list">
 							<?php

@@ -85,7 +85,19 @@ if(is_array($tipologie_notizie) && count($tipologie_notizie)){
         if ($home_show_events == "true_event") {
             $args = array('post_type' => 'evento',
                 'posts_per_page' => 1,
-
+                'meta_key' => '_dsi_evento_timestamp_inizio',
+                'orderby'   =>  array('meta_value' => 'ASC', 'date' => 'ASC'),
+                'meta_query' => array(
+                    array(
+                        'key' => '_dsi_evento_timestamp_inizio'
+                    ),
+                    array(
+                        'key' => '_dsi_evento_timestamp_inizio',
+                        'value' => time(),
+                        'compare' => '>=',
+                        'type' => 'numeric'
+                    )
+                )
             );
             $posts = get_posts($args);
             foreach ($posts as $post) {
@@ -108,7 +120,7 @@ if(is_array($tipologie_notizie) && count($tipologie_notizie)){
         <div class="col-lg-4">
 
             <div class="title-section pb-4">
-                <div class="h2"><?php _e("Circolari", "design_scuole_italia"); ?></div>
+                <h2><?php _e("Circolari", "design_scuole_italia"); ?></h2>
             </div><!-- /title-section -->
             <?php
             $args = array('post_type' => 'circolare',

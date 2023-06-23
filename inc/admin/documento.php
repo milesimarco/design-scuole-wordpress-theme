@@ -356,9 +356,6 @@ function dsi_add_documento_metaboxes() {
     ) );
 
 
-// todo servizi con correlazione bidirezionale
-
-
     $cmb_aftercontent->add_field( array(
         'id' => $prefix . 'servizi_collegati',
         'name'        => __( 'Servizi collegati', 'design_scuole_italia' ),
@@ -366,6 +363,15 @@ function dsi_add_documento_metaboxes() {
         'type'    => 'pw_multiselect',
         'options' =>  dsi_get_servizi_options(),
     ) );
+	
+    $cmb_aftercontent->add_field( array(
+        'id' => $prefix . 'link_servizi_didattici',
+        'name'        => __( 'Indirizzi di studio collegati', 'design_scuole_italia' ),
+        'desc' => __( 'Indirizzi di studio collegati al documento' , 'design_scuole_italia' ),
+        'type'    => 'pw_multiselect',
+        'options' =>  dsi_get_servizi_didattici_options(),
+    ) );
+	
 /*
     $cmb_aftercontent->add_field( array(
         'id' => $prefix . 'link_servizi_collegati',
@@ -790,7 +796,7 @@ function dsi_save_documento( $post_id) {
 
 new dsi_bidirectional_cmb2("_dsi_documento_", "documento", "servizi_collegati", "box_elementi_dati", "_dsi_servizio_link_schede_documenti");
 
-
+new dsi_bidirectional_cmb2("_dsi_documento_", "documento", "link_servizi_didattici", "box_elementi_dati", "_dsi_indirizzo_link_schede_documenti");
 
 function dsi_annulla_doc(){
     global $wpdb;
@@ -848,52 +854,30 @@ function dsi_annulla_doc_link( $actions, $post ) {
 
 add_filter( 'post_row_actions', 'dsi_annulla_doc_link', 10, 2 );
 
-
-
-
-/** aggiungo al titolo gli status custom */
-
-function dsi_documento_replace_title_column($columns) {
-
-    $new = array();
-
-    foreach($columns as $key => $title) {
-        if ($key=='title')
-            $new['new-title'] = "Titolo"; // Our New column Name
-        $new[$key] = $title;
-    }
-
-    unset($new['title']);
-    return $new;
-}
-
-// Replace the title with your custom title
-function dsi_documento_add_title_status($column_name, $post_ID) {
-    if ($column_name == 'new-title') {
+function dsi_documento_add_title_status( $actions, $post ){
+    if ( 'documento' === $post->post_type ) {
         $cont = get_the_title();
         $status = get_post_status();
-        echo "<strong>";
         ?>
-        <a class="row-title" href="<?php echo esc_url( home_url( '/' ) ); ?>wp-admin/post.php?post=<?php echo $post_ID; ?>&action=edit"><?php echo strip_tags($cont); ?></a>
         <?php
+        echo "<strong>";
         if($status == "annullato")
-            echo " - <span class=\"post-state\" style='color: #ca334a;'>Annullato</span>";
+            echo "(<span class=\"post-state\" style='color: #ca334a;'>Annullato</span>)";
         else if($status == "draft")
-            echo " - <span class=\"post-state\">Bozza</span>";
+            echo "(<span class=\"post-state\">Bozza</span>)";
         else if($status == "scaduto")
-            echo " - <span class=\"post-state\">Scaduto</span>";
+            echo "(<span class=\"post-state\">Scaduto</span>)";
         echo "</strong>";
+        echo "<script>setTimeout(function() { jQuery('select[name=\"_status\"]').parent().remove();}, 100);</script>";
     }
+    return $actions;
 }
 
-add_filter('manage_documento_posts_columns', 'dsi_documento_replace_title_column');
+add_filter('post_row_actions','dsi_documento_add_title_status', 10, 2);
 add_action('manage_documento_posts_custom_column', 'dsi_documento_add_title_status', 10, 2);
-
 
 add_filter( 'manage_edit-documento_sortable_columns', 'dsi_sortable_documento_column' );
 function dsi_sortable_documento_column( $columns ) {
-    $columns['new-title'] = 'title';
-
     //To make a column 'un-sortable' remove it from the array
     //unset($columns['date']);
 

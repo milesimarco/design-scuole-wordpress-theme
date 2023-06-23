@@ -18,8 +18,8 @@ $bio = get_the_author_meta( 'description');
 //$cognome = get_the_author_meta('last_name');
 
 
-//$foto_url = get_the_author_meta('_dsi_persona_foto');
-//$foto_id = attachment_url_to_postid($foto_url);
+$foto_url = get_the_author_meta('_dsi_persona_foto');
+$image_id = attachment_url_to_postid($foto_url);
 //$image = wp_get_attachment_image($foto_id, "item-thumb");
 $image_url = dsi_get_user_avatar($authordata);
 
@@ -121,11 +121,42 @@ $args = array(
 $schede_progetto = get_posts($args);
 
 $args = array(
-    'author' =>  $author_id,
+    'posts_per_page' => -1,
+    'post_type' => 'struttura'
+);
+$strutture = get_posts($args);
+
+function filter_my_structures($structure)
+{
+    if (is_array(get_post_meta($structure->ID, "_dsi_struttura_persone", true)) && !empty(get_post_meta($structure->ID, "_dsi_struttura_persone", true))) {
+        return in_array(
+            (string)$GLOBALS['author_id'],
+            get_post_meta($structure->ID, "_dsi_struttura_persone", true)
+        );
+    }
+    return false;
+}
+
+$strutture = array_filter($strutture, "filter_my_structures");
+
+$args = array(
     'posts_per_page' => -1,
     'post_type' => 'documento'
 );
 $documenti = get_posts($args);
+
+function filter_my_documents($document)
+{
+    if (is_array(get_post_meta($document->ID, "_dsi_documento_autori", true)) && !empty(get_post_meta($document->ID, "_dsi_documento_autori", true))) {
+        return in_array(
+            (string)$GLOBALS['author_id'],
+            get_post_meta($document->ID, "_dsi_documento_autori", true)
+        );
+    }
+    return false;
+}
+
+$documenti = array_filter($documenti, "filter_my_documents");
 
 $args = array(
     'author' =>  $author_id,
@@ -142,8 +173,8 @@ $posts = get_posts($args);
                 <div class="row variable-gutters">
                     <div class="col-12 col-sm-3 col-lg-3 d-none d-sm-block">
                         <div class="section-thumb thumb-large mx-3">
-                            <?php if($image_url) {
-                                echo "<img src='".$image_url."' alt=''/>";
+                            <?php if($image_url) {                                
+                                dsi_get_img_from_id_url( $image_id, $image_url );
                             } ?>
                         </div><!-- /section-thumb -->
                     </div><!-- /col-lg-2 -->
@@ -306,6 +337,32 @@ $posts = get_posts($args);
                                 </div><!-- /row -->
                             <?php }
 
+                            if (is_array($strutture) && count($strutture) > 0) {
+                                ?>
+                                <h4 id="art-par-documenti"  class="mb-4"><?php _e("Strutture", "design_scuole_italia"); ?></h4>
+                                <div class="row variable-gutters mb-4">
+                                    <div class="col-lg-12">
+                                        <div class="card-deck card-deck-spaced">
+                                            <?php foreach ($strutture as $struttura) { ?>
+                                                <div class="card card-bg card-icon rounded">
+                                                    <div class="card-body">
+                                                        <svg class="icon it-pdf-document">
+                                                            <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                xlink:href="#svg-school"></use>
+                                                        </svg>
+                                                        <div class="card-icon-content">
+                                                            <p>
+                                                                <strong><a href="<?php echo get_permalink($struttura); ?>" ><?php echo $struttura->post_title; ?></a></strong>
+                                                            </p>
+                                                        </div><!-- /card-icon-content -->
+                                                    </div><!-- /card-body -->
+                                                </div><!-- /card card-bg card-icon rounded -->
+                                            <?php } ?>
+                                        </div><!-- /card-deck card-deck-spaced -->
+                                    </div><!-- /col-lg-12 -->
+                                </div><!-- /row -->
+                            <?php }
+
                             if(trim($altre_info) != ""){
                                 ?>
                                 <h4 id="art-par-altre-info"
@@ -324,7 +381,7 @@ $posts = get_posts($args);
                                 <div class="row variable-gutters">
                                     <div class="col-lg-9">
                                         <ul>
-                                            <?php if($telefono_pubblico != ""){?><li><strong><?php _e("Telefono", "design_scuole_italia"); ?>:</strong> <?php echo $telefono_pubblico; ?></li><?php } ?>
+                                            <?php if($telefono_pubblico != ""){?><li><strong><?php _e("Telefono", "design_scuole_italia"); ?>:</strong> <?php echo "<a href='tel:+39$telefono_pubblico'>$telefono_pubblico</a>"; ?></li><?php } ?>
                                             <?php if($email_pubblico != ""){?><li><strong><?php _e("Email", "design_scuole_italia"); ?>:</strong> <a href="mailto:<?php echo $email_pubblico; ?>"><?php echo $email_pubblico; ?></a></li><?php } ?>
                                         </ul>
                                     </div><!-- /col-lg-9 -->

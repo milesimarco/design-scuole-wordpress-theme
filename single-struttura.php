@@ -7,9 +7,8 @@
  * @package Design_Scuole_Italia
  */
 global $post, $servizio, $progetto, $autore, $luogo, $c;
-get_template_part("template-parts/single/related-posts","post");
-get_template_part("template-parts/single/related-posts","events");
-get_template_part("template-parts/single/related-posts","circolari");
+$args = ["post", "evento", "circolare"];
+get_template_part("template-parts/single/related-posts");
 get_header();
 
 $user_can_view_post = dsi_members_can_user_view_post(get_current_user_id(), $post->ID);
@@ -170,7 +169,7 @@ $user_can_view_post = dsi_members_can_user_view_post(get_current_user_id(), $pos
                                         <?php get_template_part("template-parts/single/actions"); ?>
                                     </div><!-- /col-lg-12 -->
                                 </div><!-- /row -->
-                                <h4 id="art-par-cosa"><?php _e("Cosa fa", "design_scuole_italia"); ?></h4>
+                                <h2 id="art-par-cosa" class="h4"><?php _e("Cosa fa", "design_scuole_italia"); ?></h2>
                                 <div class="row variable-gutters">
                                     <div class="col-lg-9 wysiwig-text">
                                         <?php the_content(); ?>
@@ -327,8 +326,8 @@ $user_can_view_post = dsi_members_can_user_view_post(get_current_user_id(), $pos
                                                 <div class="card card-bg bg-color rounded">
                                                     <div class="card-body pb-1">
                                                         <ul>
-                                                            <?php if($telefono){ ?><li><strong><?php _e("Telefono", "design_scuole_italia"); ?>:</strong> <?php echo $telefono; ?></li><?php } ?>
-                                                            <?php if($mail){ ?><li><strong><?php _e("Email", "design_scuole_italia"); ?>:</strong> <?php echo $mail; ?></li><?php } ?>
+                                                        <?php if($telefono){ ?><li><strong><?php _e("Telefono", "design_scuole_italia"); ?>:</strong> <?php echo "<a href='tel:+39$telefono'>$telefono</a>"; ?></li><?php } ?>
+                                                        <?php if($mail){ ?><li><strong><?php _e("Email", "design_scuole_italia"); ?>:</strong> <?php echo "<a href = 'mailto: $mail'>$mail</a>"; ?></li><?php } ?>
                                                         </ul>
                                                     </div></div>
                                             </div></div>
