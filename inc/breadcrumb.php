@@ -332,10 +332,10 @@ class Breadcrumb_Trail {
 			// If viewing the home/blog page.
 			if ( is_home() ) {
 				$this->add_blog_items();
-			}
-
-			// If viewing a single post.
-			elseif ( is_singular() ) {
+			 else if ( is_singular() ) { // If viewing a single post.
+				if ( is_single() ) {
+					$this->items[] =  "<a href='".home_url("novita")."'>".__("Novità", "design_scuole_italia")."</a>";
+				}
 				$this->add_singular_items();
 			}
 
